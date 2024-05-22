@@ -1,6 +1,7 @@
 package org.example.model;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.sql.Connection;
@@ -16,13 +17,20 @@ public class ActeurDAO {
 //            Class.forName("com.mysql.cj.jdbc.Driver");
 //            // connection to mysql
 //            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cinetest", "root", "");
-            MysqlDataSource ds = new MysqlDataSource();
-            ds.setUseSSL(false);
-            ds.setServerName("localhost");
-            ds.setPort(3306);
-            ds.setDatabaseName("cinetest");
-            ds.setUser("root");
+        //    MysqlDataSource ds = new MysqlDataSource();
+            BasicDataSource ds = new BasicDataSource();
+         //   ds.setUseSSL(false);
+//            ds.setServerName("localhost");
+//            ds.setPort(3306);
+//            ds.setDatabaseName("cinetest");
+//            ds.setUser("root");
+//            ds.setPassword("");
+            ds.setDriverClassName("com.mysql.jdbc.Driver");
+            ds.setUsername("root");
             ds.setPassword("");
+            ds.setUrl("jdbc:mysql://localhost:3306/cinetest");
+            ds.setMaxIdle(10);
+
             con = ds.getConnection();
 
 
@@ -34,7 +42,7 @@ public class ActeurDAO {
 
     public List getActeurs() {
 
-        List<Acteur> acteurs = new ArrayList<Acteur>();
+        List<Acteur> acteurs = new ArrayList<>();
         String query = "SELECT * FROM acteur";
         try {
 

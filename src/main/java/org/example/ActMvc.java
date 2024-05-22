@@ -16,7 +16,6 @@ public class ActMvc {
         for(Acteur act: acteurs) {
             ac.addActeur(act);
         }
-
         ac.afficheActeurs();
         ac.afficheActeur(2);
     }
