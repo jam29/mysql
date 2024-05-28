@@ -1,11 +1,22 @@
 package org.example.model;
 
+import javax.persistence.*;
+import java.util.List;
+
 // Modele
+@NamedQuery(query = "from Acteur where nom=:nom", name= "by_nom")
+@Entity
 public class Acteur {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
     private String prenom;
     private String photo;
+
+    @ManyToMany(mappedBy="acteurs") // ici acteurs correspond aux acteurs de l'entity film
+    private List<Film> films;
+
     public Acteur() {}
     public Acteur(int id, String nom, String prenom, String photo) {
         this.id = id;

@@ -1,84 +1,33 @@
 package org.example.model;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.example.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
-import java.sql.*;
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ActeurDAO {
-    Connection con = null;
-
-    // Database Connection will use jdbc driver from the mysql connector jar
-    public void Dbconnect() {
-        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//            // connection to mysql
-//            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cinetest", "root", "");
-        //    MysqlDataSource ds = new MysqlDataSource();
-            BasicDataSource ds = new BasicDataSource();
-         //   ds.setUseSSL(false);
-//            ds.setServerName("localhost");
-//            ds.setPort(3306);
-//            ds.setDatabaseName("cinetest");
-//            ds.setUser("root");
-//            ds.setPassword("");
-            ds.setDriverClassName("com.mysql.jdbc.Driver");
-            ds.setUsername("root");
-            ds.setPassword("");
-            ds.setUrl("jdbc:mysql://localhost:3306/cinetest");
-            ds.setMaxIdle(10);
-
-            con = ds.getConnection();
-
-
-
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-    }
-
     public List getActeurs() {
-
-        List<Acteur> acteurs = new ArrayList<>();
-        String query = "SELECT * FROM acteur";
-        try {
-
-            Statement statement = con.createStatement();
-            ResultSet rs= statement.executeQuery(query);
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                // casting d'objet.
-                // Acteur acteur= (Acteur) rs.getObject(i);
-                Acteur act = new Acteur();
-                act.setId(id);
-                act.setNom(rs.getString("nom"));
-                act.setPrenom(rs.getString("prenom"));
-                act.setPhoto(rs.getString("photo"));
-
-                acteurs.add(act);
-
-            }
-        } catch (Exception e) {}
-        return acteurs;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query<Acteur> query =   session.createQuery("from Acteur" ,Acteur.class);  // HQL
+        List<Acteur> acteurs = query.getResultList();
+        return (acteurs);
     }
-    public void addActeur(Acteur act) {
-        // insert query
-        // using prepared statements
-        String query = "INSERT INTO acteur (nom,prenom,photo) VALUES (?,?,?)";
-        try {
-            PreparedStatement pst;
-            pst = con.prepareStatement(query);
-            pst.setString(1, act.getNom());
-            pst.setString(2, act.getPhoto());
-            pst.setString(3,act.getPhoto());
-
-            pst.executeUpdate(); // executeUpdate is used for the insertion of the data
-            System.out.println("acteur ajouté!");
-        } catch (Exception ex) {
-        }
+    public Acteur getActeur(int id) {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            return (session.get(Acteur.class,id));
     }
-}
+
+    public Acteur getActeurByName(String nom) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query<Acteur> query =   session.createNamedQuery("by_nom" ,Acteur.class);
+        query.setParameter("nom", nom);
+        Acteur acteur = query.getSingleResult();
+        return acteur;
+
+        // HQL
+
+    }
+
+
+    }
