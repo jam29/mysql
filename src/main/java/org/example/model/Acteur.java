@@ -14,8 +14,8 @@ public class Acteur {
     private String prenom;
     private String photo;
 
-    @ManyToMany(mappedBy="acteurs") // ici acteurs correspond aux acteurs de l'entity film
-    private List<Film> films;
+//    @ManyToMany(mappedBy="acteurs") // ici acteurs correspond aux acteurs de l'entity film
+//    private List<Film> films;
 
     public Acteur() {}
     public Acteur(int id, String nom, String prenom, String photo) {
